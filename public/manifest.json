@@ -1,0 +1,25 @@
+{
+  "name": "SplitKaro",
+  "short_name": "SplitKaro",
+  "description": "Track and split expenses with your roommates effortlessly",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#0F0F1A",
+  "theme_color": "#6C5CE7",
+  "orientation": "portrait",
+  "categories": ["finance", "utilities"],
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
