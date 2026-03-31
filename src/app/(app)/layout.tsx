@@ -15,7 +15,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     }
   }, [user, loading, router]);
 
-  if (loading) {
+  if (loading || (!user && typeof window !== "undefined")) {
     return (
       <div className="min-h-dvh flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">

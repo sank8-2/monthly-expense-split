@@ -54,11 +54,15 @@ export default function DashboardPage() {
       .select("user_id, profiles(id, name, email)")
       .eq("group_id", membership.group_id);
 
-    const memberList = (groupMembers ?? []).map((m) => ({
-      id: m.user_id,
-      name: (m.profiles as unknown as { name: string })?.name ?? "User",
-      email: (m.profiles as unknown as { email: string })?.email ?? "",
-    }));
+    const memberList = (groupMembers ?? []).map((m) => {
+      // Supabase joins can return profiles as an object or an array of one object
+      const profileData = Array.isArray(m.profiles) ? m.profiles[0] : m.profiles;
+      return {
+        id: m.user_id,
+        name: (profileData as any)?.name ?? "User",
+        email: (profileData as any)?.email ?? "",
+      };
+    });
     setMembers(memberList);
 
     // Get this month's expenses
@@ -275,7 +279,10 @@ export default function DashboardPage() {
                     <p className="text-xs text-text-muted">
                       {isPaidByMe
                         ? "Paid by you"
-                        : `Paid by ${(expense.paid_by_profile as unknown as { name: string })?.name ?? "someone"}`}
+                        : `Paid by ${(() => {
+                            const p = Array.isArray(expense.paid_by_profile) ? expense.paid_by_profile[0] : expense.paid_by_profile;
+                            return (p as any)?.name ?? "someone";
+                          })()}`}
                     </p>
                   </div>
                   <div className="text-right shrink-0">

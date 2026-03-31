@@ -30,12 +30,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const fetchProfile = useCallback(
     async (userId: string) => {
-      const { data } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .single();
-      setProfile(data);
+      try {
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", userId)
+          .single();
+        
+        if (error) {
+          console.error("Error fetching profile:", error);
+          setProfile(null);
+        } else {
+          setProfile(data);
+        }
+      } catch (err) {
+        console.error("Unexpected error fetching profile:", err);
+        setProfile(null);
+      }
     },
     [supabase]
   );

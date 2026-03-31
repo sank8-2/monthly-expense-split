@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import Image from "next/image";
 import { cn, getInitials } from "@/lib/utils";
 
 export interface AvatarProps {
@@ -18,7 +18,8 @@ const AVATAR_COLORS = [
   "from-blue-400 to-cyan-500",
 ];
 
-function getColorIndex(name: string): number {
+function getColorIndex(name?: string | null): number {
+  if (!name) return 0;
   let hash = 0;
   for (let i = 0; i < name.length; i++) {
     hash = name.charCodeAt(i) + ((hash << 5) - hash);
@@ -27,27 +28,34 @@ function getColorIndex(name: string): number {
 }
 
 export function Avatar({ name, src, size = "md", className }: AvatarProps) {
+  const safeName = name || "User";
   const sizeClasses = {
     sm: "w-8 h-8 text-xs",
     md: "w-10 h-10 text-sm",
     lg: "w-14 h-14 text-base",
   };
 
+  const dimensions = {
+    sm: 32,
+    md: 40,
+    lg: 56,
+  };
+
   if (src) {
     return (
-      <img
-        src={src}
-        alt={name}
-        className={cn(
-          "rounded-full object-cover",
-          sizeClasses[size],
-          className
-        )}
-      />
+      <div className={cn("relative rounded-full overflow-hidden", sizeClasses[size], className)}>
+        <Image
+          src={src}
+          alt={safeName}
+          width={dimensions[size]}
+          height={dimensions[size]}
+          className="object-cover"
+        />
+      </div>
     );
   }
 
-  const gradient = AVATAR_COLORS[getColorIndex(name)];
+  const gradient = AVATAR_COLORS[getColorIndex(safeName)];
 
   return (
     <div
@@ -58,7 +66,7 @@ export function Avatar({ name, src, size = "md", className }: AvatarProps) {
         className
       )}
     >
-      {getInitials(name)}
+      {getInitials(safeName)}
     </div>
   );
 }
