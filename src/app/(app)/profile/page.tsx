@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/Button";
 import { Avatar } from "@/components/ui/Avatar";
 import { Badge } from "@/components/ui/Badge";
 import { Modal } from "@/components/ui/Modal";
+import { usePwaInstall } from "@/lib/pwaStore";
 import {
   User,
   Mail,
@@ -19,10 +20,12 @@ import {
   Copy,
   Check,
   Crown,
+  Download,
 } from "lucide-react";
 
 export default function ProfilePage() {
   const { user, profile, signOut, refreshProfile } = useAuth();
+  const { prompt, isInstalled, install } = usePwaInstall();
   const supabase = createClient();
 
   const [name, setName] = useState(profile?.name ?? "");
@@ -184,11 +187,11 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="px-4 pt-6 space-y-6 max-w-md mx-auto">
+    <div className="px-4 pt-6 space-y-6 max-w-md mx-auto pb-24">
       {/* Header */}
       <div className="flex items-center gap-4">
         <Avatar name={profile?.name ?? "U"} size="lg" />
-        <div>
+        <div className="text-left">
           <h1 className="text-2xl font-bold text-text">
             {profile?.name ?? "User"}
           </h1>
@@ -196,9 +199,27 @@ export default function ProfilePage() {
         </div>
       </div>
 
+      {/* PWA Install - Only show if not installed and prompt is available */}
+      {!isInstalled && prompt && (
+        <Card className="bg-gradient-to-br from-primary/10 to-accent/10 border-primary/20">
+          <div className="flex items-center gap-4">
+            <div className="p-3 rounded-2xl bg-primary/20 text-primary">
+              <Download size={24} />
+            </div>
+            <div className="flex-1 text-left">
+              <h3 className="font-bold text-text">Install SplitKaro</h3>
+              <p className="text-xs text-text-muted">Better performance & quick access</p>
+            </div>
+            <Button size="sm" onClick={install} className="rounded-xl">
+              Install
+            </Button>
+          </div>
+        </Card>
+      )}
+
       {/* Profile Edit */}
       <Card className="space-y-4">
-        <h2 className="text-sm font-semibold text-text-muted uppercase tracking-wider">
+        <h2 className="text-sm font-semibold text-text-muted uppercase tracking-wider text-left">
           Profile
         </h2>
         <Input
@@ -241,7 +262,7 @@ export default function ProfilePage() {
         {groupId ? (
           <>
             <div className="flex items-center justify-between">
-              <div>
+              <div className="text-left">
                 <p className="text-lg font-bold text-text">{groupName}</p>
                 <p className="text-xs text-text-dim">
                   {groupMembers.length} members
@@ -267,7 +288,7 @@ export default function ProfilePage() {
                   className="flex items-center gap-3 p-2 rounded-xl"
                 >
                   <Avatar name={member.name} size="sm" />
-                  <div className="flex-1">
+                  <div className="flex-1 text-left">
                     <p className="text-sm font-medium text-text">
                       {member.name}
                       {member.id === user?.id && (
@@ -288,7 +309,7 @@ export default function ProfilePage() {
           </>
         ) : (
           <div className="space-y-3">
-            <p className="text-text-muted text-sm">
+            <p className="text-text-muted text-sm text-left">
               Create a group or join an existing one to start splitting
               expenses.
             </p>
@@ -345,7 +366,7 @@ export default function ProfilePage() {
             onChange={(e) => setInviteEmails(e.target.value)}
             icon={<Mail size={16} />}
           />
-          <p className="text-xs text-text-dim">
+          <p className="text-xs text-text-dim text-left">
             They must have signed up first. You can also share the Group ID
             later.
           </p>
@@ -373,7 +394,7 @@ export default function ProfilePage() {
             value={joinCode}
             onChange={(e) => setJoinCode(e.target.value)}
           />
-          <p className="text-xs text-text-dim">
+          <p className="text-xs text-text-dim text-left">
             Ask your roommate for the Group ID from their Profile page.
           </p>
           <Button
