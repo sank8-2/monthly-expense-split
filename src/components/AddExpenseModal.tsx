@@ -26,7 +26,7 @@ export function AddExpenseModal({
   onAdded,
 }: AddExpenseModalProps) {
   const { user } = useAuth();
-  const supabase = createClient();
+  const [supabase] = useState(() => createClient());
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState<ExpenseCategory>("other");

@@ -26,7 +26,7 @@ import {
 export default function ProfilePage() {
   const { user, profile, signOut, refreshProfile } = useAuth();
   const { prompt, isInstalled, install } = usePwaInstall();
-  const supabase = createClient();
+  const [supabase] = useState(() => createClient());
 
   const [name, setName] = useState(profile?.name ?? "");
   const [upiId, setUpiId] = useState(profile?.upi_id ?? "");

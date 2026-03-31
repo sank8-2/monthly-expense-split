@@ -29,7 +29,7 @@ import type { Expense, ExpenseCategory } from "@/types";
 
 export default function ExpensesPage() {
   const { user } = useAuth();
-  const supabase = createClient();
+  const [supabase] = useState(() => createClient());
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [groupId, setGroupId] = useState<string | null>(null);
   const [members, setMembers] = useState<{ id: string; name: string }[]>([]);

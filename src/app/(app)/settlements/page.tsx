@@ -24,7 +24,7 @@ import type { BalanceSummary, DebtEdge } from "@/types";
 
 export default function SettlementsPage() {
   const { user } = useAuth();
-  const supabase = createClient();
+  const [supabase] = useState(() => createClient());
   const [members, setMembers] = useState<{ id: string; name: string }[]>([]);
   const [debts, setDebts] = useState<DebtEdge[]>([]);
   const [groupId, setGroupId] = useState<string | null>(null);

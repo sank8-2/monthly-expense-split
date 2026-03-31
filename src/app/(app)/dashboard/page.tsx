@@ -23,7 +23,7 @@ import { AddExpenseModal } from "@/components/AddExpenseModal";
 
 export default function DashboardPage() {
   const { user, profile } = useAuth();
-  const supabase = createClient();
+  const [supabase] = useState(() => createClient());
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [members, setMembers] = useState<{ id: string; name: string; email: string }[]>([]);
   const [debts, setDebts] = useState<DebtEdge[]>([]);
